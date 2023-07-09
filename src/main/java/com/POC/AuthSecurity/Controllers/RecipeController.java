@@ -60,16 +60,5 @@ public class RecipeController {
         return recipeService.deleteRecipeByName(name);
     }
 
-    @PostMapping("addRecipePicture/{recipeName}")
-    public String addRecipePicture(@PathVariable String recipeName, @RequestParam("recipePicture") MultipartFile recipePicture) {
-        return recipeService.addRecipePicture(recipeName, recipePicture);
-    }
-    @GetMapping("getRecipePicture/{recipeName}")
-    public ResponseEntity<FileSystemResource> getRecipePicture(@PathVariable String recipeName) {
-        return recipeService.getRecipePicture(recipeName);
-    }
-    @PatchMapping("changeRecipePictureName/{recipeName}/{newRecipeName}")
-    public String changeRecipePictureName(@PathVariable String recipeName, @PathVariable String newRecipeName) {
-        return recipeService.changeRecipePictureName(recipeName, newRecipeName);
-    }
+
 }

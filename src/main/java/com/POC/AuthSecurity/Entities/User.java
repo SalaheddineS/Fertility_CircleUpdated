@@ -30,7 +30,8 @@ public class User implements UserDetails {
     private String password;
     private Integer number;
     private String address;
-    private String profilePictureUrl;
+    @OneToOne
+    private Image profilePicture;
     private boolean active;
 
     @ManyToMany(fetch = FetchType.EAGER)

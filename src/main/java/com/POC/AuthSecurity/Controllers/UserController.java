@@ -70,13 +70,7 @@ public class UserController {
         return userService.activateUser(email);
     }
 
-    @PutMapping("/addProfilePicture/{email}")
-    public String addProfilePicture(@PathVariable String email,@RequestParam("profilePicture") MultipartFile profilePicture) {
-        return userService.addProfilePicture(email, profilePicture);
-    }
 
-    @GetMapping("/getProfilePicture/{email}")
-    public ResponseEntity<FileSystemResource> getProfilePicture(@PathVariable String email) {
-        return userService.getProfilePicture(email);
-    }
+
+
 }

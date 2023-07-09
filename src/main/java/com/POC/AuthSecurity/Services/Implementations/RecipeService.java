@@ -29,6 +29,7 @@ public class RecipeService implements IRecipeService {
         try
         {
             if (recipeRepository.findRecipeByName(recipe.getName()) != null) throw new RuntimeException("Recipe already exists");
+
             return recipeRepository.save(recipe);
         }
         catch (Exception e) {
@@ -76,7 +77,6 @@ public class RecipeService implements IRecipeService {
             Recipe recipe = getRecipeById(id);
             if (newRecipe.getName() != null)
             {
-                changeRecipePictureName(recipe.getName(), newRecipe.getName());
                 recipe.setName(newRecipe.getName());
             }
             if (newRecipe.getIngredients() != null)
@@ -144,73 +144,11 @@ public class RecipeService implements IRecipeService {
         }
     }
 
-    @Override
-    public String addRecipePicture(String recipeName, MultipartFile recipePicture) {
 
-        Recipe recipe=recipeRepository.findRecipeByName(recipeName);
-        if(recipePicture == null) throw new RuntimeException("Recipe picture is null");
-        String fileExtension = recipePicture.getOriginalFilename().substring(recipePicture.getOriginalFilename().lastIndexOf(".")+1);
-        String fileName = recipeName + "." + fileExtension;
-        Path currentPath = Paths.get(System.getProperty("user.dir"));
-        Path savingPath= Paths.get(currentPath.toString(), "src","main","resources","assets","RecipePictures", fileName);
-        try
-        {
-            recipePicture.transferTo(savingPath);
-            recipe.setRecipeUrl(savingPath.toString());
-            System.out.println(savingPath.toString());
-            recipeRepository.save(recipe);
-            return "Recipe picture successfully added";
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException("Error while adding recipe picture, here are the details : " + e);
-        }
-    }
 
-    @Override
-    public ResponseEntity<FileSystemResource> getRecipePicture(String recipeName) {
-        try
-        {
-            Recipe recipe = recipeRepository.findRecipeByName(recipeName);
-            if (recipe == null) throw new RuntimeException("Recipe not found");
-            File file = new File(recipe.getRecipeUrl());
-            if (!file.exists()) throw new RuntimeException("Recipe picture not found");
-            String fileExtension = recipe.getRecipeUrl().substring(recipe.getRecipeUrl().lastIndexOf(".") + 1);
-            FileSystemResource resource = new FileSystemResource(file);
-            HttpHeaders headers = new HttpHeaders();
-            if (fileExtension.equals("png"))
-                headers.setContentType(MediaType.IMAGE_PNG); // Adjust the media type based on your image type
-            if (fileExtension.equals("jpg") || fileExtension.equals("jpeg"))
-                headers.setContentType(MediaType.IMAGE_JPEG);
-            if (fileExtension.equals("gif")) headers.setContentType(MediaType.IMAGE_GIF);
-            return new ResponseEntity<>(resource, headers, HttpStatus.OK);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException("Error while getting recipe picture, here are the details : " + e);
-        }
-    }
 
-    @Override
-    public String changeRecipePictureName(String recipeName, String newRecipeName) {
-        try
-        {
-            Recipe recipe = recipeRepository.findRecipeByName(recipeName);
-            if (recipe == null) throw new RuntimeException("Recipe not found");
-            if (recipeRepository.findRecipeByName(newRecipeName) != null) throw new RuntimeException("Recipe picture name already exists");
-            File file = new File(recipe.getRecipeUrl());
-            if (!file.exists()) throw new RuntimeException("Recipe picture not found");
-            String fileExtension = recipe.getRecipeUrl().substring(recipe.getRecipeUrl().lastIndexOf(".") + 1);
-            file.renameTo(new File(recipe.getRecipeUrl().replace(recipeName, newRecipeName)));
-            recipe.setRecipeUrl(recipe.getRecipeUrl().replace(recipeName, newRecipeName));
-            recipeRepository.save(recipe);
-            return "Recipe picture name successfully changed";
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException("Error while changing recipe picture name, here are the details : " + e);
-        }
-    }
+
+
 
 
 }

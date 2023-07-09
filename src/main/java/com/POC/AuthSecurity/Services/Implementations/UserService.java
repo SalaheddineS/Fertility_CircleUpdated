@@ -77,7 +77,7 @@ public class UserService implements IUserService {
                     if (user.getRoles() != null) { //we check if the user has entered roles wich is not allowed
                         user.getRoles().clear(); //we clear the roles list
                     }
-                    user.setProfilePictureUrl(null);
+                    user.setProfilePicture(null);
                     user.setPassword(bCryptPasswordEncoder().encode(user.getPassword()));
                     user.setActive(false);
                     user.getRoles().add(role); //we add the USER role to the user
@@ -190,55 +190,10 @@ public class UserService implements IUserService {
             throw new RuntimeException("Error Activating User");
         }
     }
-    @Override
-    public String addProfilePicture(String email, MultipartFile profilePicture) {
-        try {
-            email = email.toLowerCase();
-            if (userRepository.findByEmail(email).isEmpty()) throw new RuntimeException("User not found");
-            String fileExtension = profilePicture.getOriginalFilename().substring(profilePicture.getOriginalFilename().lastIndexOf(".") + 1);
-            String fileName = email + "." + fileExtension;
-
-            // Update the destination path
-            String destinationPath = "C:\\Users\\salah\\Desktop\\Fertility_Circle-master\\src\\main\\resources\\assets\\ProfilePictures" +File.separator +fileName;
-            File destinationFile = new File(destinationPath);
-            profilePicture.transferTo(destinationFile);
-            User user = userRepository.findByEmail(email).get();
-            user.setProfilePictureUrl(destinationPath);
-            userRepository.save(user);
-            return "Profile picture added successfully";
-        } catch (Exception e) {
-            e.printStackTrace(); // Add this line to print the stack trace
-            throw new RuntimeException("Error adding profile picture");
-        }
-    }
 
 
 
-    @Override
-    public ResponseEntity<FileSystemResource> getProfilePicture(String email) {
-        try {
-            email = email.toLowerCase();
-            User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
-
-            if (user.getProfilePictureUrl()==null) {
-                throw new RuntimeException("Profile picture not found");
-            }
-            String fileExtension = user.getProfilePictureUrl().substring(user.getProfilePictureUrl().lastIndexOf(".") + 1);
 
 
-            File file = new File(user.getProfilePictureUrl());
-            // Create a FileSystemResource from the file
-            FileSystemResource resource = new FileSystemResource(file);
-
-            HttpHeaders headers = new HttpHeaders();
-            if(fileExtension.equals("png")) headers.setContentType(MediaType.IMAGE_PNG); // Adjust the media type based on your image type
-            if (fileExtension.equals("jpg") || fileExtension.equals("jpeg")) headers.setContentType(MediaType.IMAGE_JPEG);
-            if (fileExtension.equals("gif")) headers.setContentType(MediaType.IMAGE_GIF);
-            return new ResponseEntity<>(resource, headers, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace(); // Add this line to print the stack trace
-            throw new RuntimeException("Error retrieving profile picture");
-        }
-    }
 
 }

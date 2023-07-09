@@ -25,7 +25,5 @@ public interface IRecipeService {
     //DELETE
     String deleteRecipeById(int id);
     String deleteRecipeByName(String name);
-    String addRecipePicture(String recipeName, MultipartFile recipePicture);
-    ResponseEntity<FileSystemResource> getRecipePicture(String recipeName);
-    String changeRecipePictureName(String recipeName, String newRecipeName);
+
 }

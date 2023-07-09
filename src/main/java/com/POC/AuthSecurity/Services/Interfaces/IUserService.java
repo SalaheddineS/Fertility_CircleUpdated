@@ -19,7 +19,6 @@ public interface IUserService {
     String removeRoleFromUser(String email, String roleName);
     String changeProgramToUser(String email, String ProgramName);
     String activateUser(String email);
-    String addProfilePicture(String email, MultipartFile profilePicture);
-    ResponseEntity<FileSystemResource> getProfilePicture(String email);
+
 
 }
