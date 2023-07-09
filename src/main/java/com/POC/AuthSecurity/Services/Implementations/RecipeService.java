@@ -78,6 +78,7 @@ public class RecipeService implements IRecipeService {
             Recipe recipe = getRecipeById(id);
             if (newRecipe.getName() != null)
             {
+                imageService.updateRecipePictureName(recipe.getName(), newRecipe.getName());
                 recipe.setName(newRecipe.getName());
             }
             if (newRecipe.getIngredients() != null)
