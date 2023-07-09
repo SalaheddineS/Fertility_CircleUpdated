@@ -70,7 +70,24 @@ public class UserController {
         return userService.activateUser(email);
     }
 
+    @PutMapping("/deactivateUser")
+    public String deactivateUser(@RequestBody String email) {
+        return userService.deactivateUser(email);
+    }
 
+    @PutMapping("/assignProfilePictureToUser/{email}")
+    public String assignProfilePictureToUser(@PathVariable String email, @RequestParam("profileImage") MultipartFile file) {
+        return userService.assignProfilePictureToUser(email, file);
+    }
 
+    @PutMapping("/removeProfilePictureFromUser/{email}")
+    public String removeProfilePictureFromUser(@PathVariable String email) {
+        return userService.removeProfilePictureFromUser(email);
+    }
+
+    @GetMapping("/getProfilePicture/{email}")
+    public ResponseEntity<FileSystemResource> getProfilePicture(@PathVariable String email) {
+        return userService.getProfilePicture(email);
+    }
 
 }

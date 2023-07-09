@@ -22,7 +22,8 @@ import java.util.List;
 @AllArgsConstructor
 @Transactional
 public class RecipeService implements IRecipeService {
-    RecipeRepository recipeRepository;
+    private final RecipeRepository recipeRepository;
+    private final ImageService imageService;
     //CREATE
     @Override
     public Recipe addRecipe(Recipe recipe) {
@@ -64,7 +65,7 @@ public class RecipeService implements IRecipeService {
     public Recipe getRecipeByName(String name) {
         try
         {
-            return recipeRepository.findRecipeByName(name);
+            return recipeRepository.findRecipeByName(name).orElseThrow(() -> new RuntimeException("Recipe not found"));
         } catch (Exception e) {
             throw new RuntimeException("Recipe not found");
         }
@@ -144,11 +145,20 @@ public class RecipeService implements IRecipeService {
         }
     }
 
+    @Override
+    public String assignImageToRecipe(String recipe, MultipartFile file) {
+        return imageService.addRecipePicture(recipe, file);
+    }
 
+    @Override
+    public String removeImageFromRecipe(String recipe) {
+        return imageService.removeRecipePicture(recipe);
+    }
 
-
-
-
+    @Override
+    public ResponseEntity<FileSystemResource> getImageRecipe(String recipe) {
+        return imageService.getRecipePicture(recipe);
+    }
 
 
 }

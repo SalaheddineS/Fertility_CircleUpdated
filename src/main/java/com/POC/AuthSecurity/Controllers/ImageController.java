@@ -34,4 +34,12 @@ public class ImageController {
     public ResponseEntity<FileSystemResource> getRecipePicture(@PathVariable String recipeName){
         return imageService.getRecipePicture(recipeName);
     }
+    @DeleteMapping("removeProfilePicture/{email}")
+    public String removeProfilePicture(@PathVariable String email){
+        return imageService.removeProfilePicture(email);
+    }
+    @DeleteMapping("removeRecipePicture/{recipeName}")
+    public String removeRecipePicture(@PathVariable String recipeName){
+        return imageService.removeRecipePicture(recipeName);
+    }
 }

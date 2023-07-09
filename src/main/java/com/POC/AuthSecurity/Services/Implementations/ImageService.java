@@ -1,7 +1,11 @@
 package com.POC.AuthSecurity.Services.Implementations;
 
 import com.POC.AuthSecurity.Entities.Image;
+import com.POC.AuthSecurity.Entities.Recipe;
+import com.POC.AuthSecurity.Entities.User;
 import com.POC.AuthSecurity.Repositories.ImageRepository;
+import com.POC.AuthSecurity.Repositories.RecipeRepository;
+import com.POC.AuthSecurity.Repositories.UserRepository;
 import com.POC.AuthSecurity.Services.Interfaces.IImageService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
@@ -26,11 +30,14 @@ import java.nio.file.Paths;
 public class ImageService implements IImageService {
 
     private final ImageRepository imageRepository;
+    private final UserRepository userRepository;
+    private final RecipeRepository recipeRepository;
 
     @Override
     public String addProfilePicture(String email, MultipartFile profilePicture) {
+        if (profilePicture.isEmpty()) throw new RuntimeException("Profile picture is empty");
+        if (userRepository.findByEmail(email).isEmpty()) throw new RuntimeException("User not found");
         String extension = profilePicture.getOriginalFilename().substring(profilePicture.getOriginalFilename().lastIndexOf(".") + 1);
-
         Path currentPath = Paths.get(System.getProperty("user.dir"));
         Path savingPath = Paths.get(currentPath.toString(), "src", "main", "resources", "assets", "ProfilePictures", email + "." + extension);
 
@@ -54,6 +61,9 @@ public class ImageService implements IImageService {
                     .type(extension)
                     .build();
             imageRepository.save(image);
+            User user = userRepository.findByEmail(email).get();
+            user.setProfilePicture(image);
+            userRepository.save(user);
             }
             return "Profile picture added successfully";
         } catch (Exception e) {
@@ -63,6 +73,7 @@ public class ImageService implements IImageService {
 
     @Override
     public ResponseEntity<FileSystemResource> getProfilePicture(String email) {
+        if (userRepository.findByEmail(email).isEmpty()) throw new RuntimeException("User not found");
         try
         {
             Image image = imageRepository.findByName(email).orElseThrow(() -> new RuntimeException("Profile picture not found"));
@@ -91,6 +102,8 @@ public class ImageService implements IImageService {
 
     @Override
     public String addRecipePicture(String recipeName, MultipartFile RecipePicture) {
+        if (RecipePicture.isEmpty()) throw new RuntimeException("Recipe picture is empty");
+        if (recipeRepository.findRecipeByName(recipeName).isEmpty()) throw new RuntimeException("Recipe not found");
         String extension = RecipePicture.getOriginalFilename().substring(RecipePicture.getOriginalFilename().lastIndexOf(".") + 1);
 
         Path currentPath = Paths.get(System.getProperty("user.dir"));
@@ -115,6 +128,9 @@ public class ImageService implements IImageService {
                         .type(extension)
                         .build();
                 imageRepository.save(image);
+                Recipe recipe = recipeRepository.findRecipeByName(recipeName).get();
+                recipe.setRecipePicture(image);
+                recipeRepository.save(recipe);
             }
             return "Recipe picture added successfully";
         } catch (Exception e) {
@@ -126,6 +142,7 @@ public class ImageService implements IImageService {
     public ResponseEntity<FileSystemResource> getRecipePicture(String recipeName) {
         try
         {
+            if (recipeRepository.findRecipeByName(recipeName).isEmpty()) throw new RuntimeException("Recipe not found");
             Image image = imageRepository.findByName(recipeName).orElseThrow(() -> new RuntimeException("Recipe picture not found"));
             File file = new File(System.getProperty("user.dir") + "/src/main/resources/assets/RecipePictures/" + image.getName() + "." + image.getType());
             if (!file.exists()) throw new RuntimeException("Error whilst getting the Recipe picture");
@@ -157,6 +174,9 @@ public class ImageService implements IImageService {
         if (!file.exists()) throw new RuntimeException("Error whilst getting the profile picture");
         file.delete();
         imageRepository.delete(image);
+        User user = userRepository.findByEmail(email).get();
+        user.setProfilePicture(null);
+        userRepository.save(user);
         return "Profile picture deleted successfully";
     }
 
@@ -167,6 +187,9 @@ public class ImageService implements IImageService {
         if (!file.exists()) throw new RuntimeException("Error whilst getting the Recipe picture");
         file.delete();
         imageRepository.delete(image);
+        Recipe recipe = recipeRepository.findRecipeByName(recipeName).get();
+        recipe.setRecipePicture(null);
+        recipeRepository.save(recipe);
         return "Recipe picture deleted successfully";
     }
 }

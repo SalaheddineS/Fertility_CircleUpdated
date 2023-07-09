@@ -3,8 +3,10 @@ package com.POC.AuthSecurity.Repositories;
 import com.POC.AuthSecurity.Entities.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
-    Recipe findRecipeByName(String name);
+    Optional<Recipe> findRecipeByName(String name);
     void deleteRecipeByName(String name);
 
 }

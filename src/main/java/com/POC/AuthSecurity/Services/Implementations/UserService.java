@@ -10,16 +10,12 @@ import com.POC.AuthSecurity.Security.JwtUtilities;
 import com.POC.AuthSecurity.Services.Interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -32,17 +28,18 @@ public class UserService implements IUserService {
     private final RoleRepository roleRepository;
     private final JwtUtilities jwtUtilities;
     private final ProgramRepository programRepository;
-    private final String PROFILE_PICTURE_PATH = "src/main/resources/ProfilePictures";
+    private final ImageService imageService ;
 
     BCryptPasswordEncoder bCryptPasswordEncoder (){
         return new BCryptPasswordEncoder();
     }
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, JwtUtilities jwtUtilities, ProgramRepository programRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, JwtUtilities jwtUtilities, ProgramRepository programRepository, ImageService imageService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.jwtUtilities = jwtUtilities;
         this.programRepository = programRepository;
+        this.imageService = imageService;
     }
 
     @Override
@@ -130,6 +127,7 @@ public class UserService implements IUserService {
                 } else throw new RuntimeException("Invalid number");
             }
 
+            userInfo.setProfilePicture(user.getProfilePicture());
             userInfo.setActive(userInfo.isActive());
             userRepository.save(userInfo);
             return "User updated successfully";
@@ -191,9 +189,32 @@ public class UserService implements IUserService {
         }
     }
 
+    @Override
+    public String deactivateUser(String email) {
+        try {
+            email = email.toLowerCase();
+            User user = userRepository.findByEmail(email).get();
+            user.setActive(false);
+            return "User Deactivated Successfully";
+        } catch (Exception e) {
+            throw new RuntimeException("Error Deactivating User");
+        }
+    }
+        //to test
+    @Override
+    public String assignProfilePictureToUser(String email, MultipartFile file) {
+         return imageService.addProfilePicture(email, file);
+    }
 
+    @Override
+    public String removeProfilePictureFromUser(String email) {
+        return imageService.removeProfilePicture(email);
+    }
 
-
+    @Override
+    public ResponseEntity<FileSystemResource> getProfilePicture(String email) {
+        return imageService.getProfilePicture(email);
+    }
 
 
 }

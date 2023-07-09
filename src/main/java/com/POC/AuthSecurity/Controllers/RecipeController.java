@@ -60,5 +60,19 @@ public class RecipeController {
         return recipeService.deleteRecipeByName(name);
     }
 
+    @PutMapping("assignImageToRecipe/{recipe}")
+    public String assignImageToRecipe(@PathVariable String recipe, @RequestParam("recipeImage") MultipartFile file) {
+        return recipeService.assignImageToRecipe(recipe, file);
+    }
+
+    @PutMapping("removeImageFromRecipe/{recipe}")
+    public String removeImageFromRecipe(@PathVariable String recipe) {
+        return recipeService.removeImageFromRecipe(recipe);
+    }
+
+    @GetMapping("getImageRecipe/{recipe}")
+    public ResponseEntity<FileSystemResource> getImageRecipe(@PathVariable String recipe) {
+        return recipeService.getImageRecipe(recipe);
+    }
 
 }
