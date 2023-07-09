@@ -113,9 +113,13 @@ public class ImageService implements IImageService {
             // Read the uploaded image into a BufferedImage
             BufferedImage originalImage = ImageIO.read(RecipePicture.getInputStream());
             // Resize the image to 400x400
-            BufferedImage resizedImage = new BufferedImage(400, 400, BufferedImage.TYPE_INT_ARGB);
+            BufferedImage resizedImage = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g = resizedImage.createGraphics();
-            g.drawImage(originalImage, 0, 0, 400, 400, null);
+
+            // Set the rendering hint to improve the interpolation quality
+            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+
+            g.drawImage(originalImage, 0, 0, 800, 800, null);
             g.dispose();
 
             // Save the resized image to the specified path using transferTo()
@@ -191,5 +195,19 @@ public class ImageService implements IImageService {
         recipe.setRecipePicture(null);
         recipeRepository.save(recipe);
         return "Recipe picture deleted successfully";
+    }
+
+    @Override
+    public String updateRecipePictureName(String oldName, String newName) {
+        if (recipeRepository.findRecipeByName(oldName).isEmpty()) throw new RuntimeException("Recipe not found");
+        Image image = imageRepository.findByName(oldName).get();
+        if (image.getName().equals(newName)) throw new RuntimeException("New name is the same as the old one");
+        if (imageRepository.findByName(newName).isPresent()) throw new RuntimeException("New name already exists");
+        File file = new File(System.getProperty("user.dir") + "/src/main/resources/assets/RecipePictures/" + image.getName() + "." + image.getType());
+        if (!file.exists()) throw new RuntimeException("Error whilst getting the Recipe picture");
+        file.renameTo(new File(System.getProperty("user.dir") + "/src/main/resources/assets/RecipePictures/" + newName + "." + image.getType()));
+        image.setName(newName);
+        imageRepository.save(image);
+        return "Recipe picture name updated successfully";
     }
 }

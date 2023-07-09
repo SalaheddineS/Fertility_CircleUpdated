@@ -42,4 +42,10 @@ public class ImageController {
     public String removeRecipePicture(@PathVariable String recipeName){
         return imageService.removeRecipePicture(recipeName);
     }
+
+    @PatchMapping("updateRecipePictureName/{oldName}/{newName}")
+    public String updateRecipePictureName(@PathVariable String oldName, @PathVariable String newName){
+        return imageService.updateRecipePictureName(oldName, newName);
+    }
+
 }

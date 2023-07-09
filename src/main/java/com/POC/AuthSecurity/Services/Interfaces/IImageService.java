@@ -11,4 +11,5 @@ public interface IImageService {
     ResponseEntity<FileSystemResource> getRecipePicture(String recipeName);
     String removeProfilePicture(String email);
     String removeRecipePicture(String recipeName);
+    String updateRecipePictureName(String oldName, String newName);
 }

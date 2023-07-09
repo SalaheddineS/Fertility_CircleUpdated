@@ -29,7 +29,7 @@ public class RecipeService implements IRecipeService {
     public Recipe addRecipe(Recipe recipe) {
         try
         {
-            if (recipeRepository.findRecipeByName(recipe.getName()) != null) throw new RuntimeException("Recipe already exists");
+            if (recipeRepository.findRecipeByName(recipe.getName()).isPresent()) throw new RuntimeException("Recipe already exists");
 
             return recipeRepository.save(recipe);
         }
