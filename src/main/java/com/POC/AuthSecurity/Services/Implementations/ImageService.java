@@ -202,12 +202,12 @@ public class ImageService implements IImageService {
         if (recipeRepository.findRecipeByName(oldName).isEmpty()) throw new RuntimeException("Recipe not found");
         Image image = imageRepository.findByName(oldName).get();
         if (image.getName().equals(newName)) throw new RuntimeException("New name is the same as the old one");
-        if (imageRepository.findByName(newName).isPresent()) throw new RuntimeException("New name already exists");
+        image.setName(newName);
+        imageRepository.save(image);
         File file = new File(System.getProperty("user.dir") + "/src/main/resources/assets/RecipePictures/" + image.getName() + "." + image.getType());
         if (!file.exists()) throw new RuntimeException("Error whilst getting the Recipe picture");
         file.renameTo(new File(System.getProperty("user.dir") + "/src/main/resources/assets/RecipePictures/" + newName + "." + image.getType()));
-        image.setName(newName);
-        imageRepository.save(image);
+
         return "Recipe picture name updated successfully";
     }
 }
