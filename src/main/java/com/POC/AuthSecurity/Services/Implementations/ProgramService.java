@@ -173,7 +173,7 @@ public class ProgramService implements IProgramService {
             List<Challenge> challengesPaginated = challenges.subList(start, end);
             List<ChallengeDTO> challengesDTO = new ArrayList<>();
             for(Challenge c : challengesPaginated){
-                challengesDTO.add(ChallengeDTO.builder().id(c.getId()).name(c.getName()).description(c.getDescription()).build());
+                challengesDTO.add(ChallengeDTO.builder().id(c.getId()).name(c.getChallengeuid()).description(c.getDescription()).build());
             }
             return challengesDTO;
         } catch (Exception e) {

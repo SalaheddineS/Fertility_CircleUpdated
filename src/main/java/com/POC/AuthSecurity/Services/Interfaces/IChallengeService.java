@@ -12,7 +12,7 @@ public interface IChallengeService {
 
     ChallengeDTO getById(int id);
 
-    ChallengeDTO getByName(String name);
+    ChallengeDTO getByChallengeuid(String name);
 
     //Ajout
     Challenge addChallenge(Challenge challenge);
@@ -20,18 +20,18 @@ public interface IChallengeService {
     //Supprimer
     String deleteById(int id);
 
-    String deleteByName(String name);
+    String deleteByChallengeuid(String name);
 
     //Update
     String updateChallengeById(Challenge challenge);
 
-    String updateChallengeDescriptionByName(Challenge challenge);
+    String updateChallengeDescriptionByChallengeuid(Challenge challenge);
 
     List<ChallengeDTO> getCompletedChallengesByUser(String email);
     List<ChallengeDTO> getUncompletedChallengesByUser(String email);
 
     String addCompletedChallengeToUserByEmailAndChallengeId(String email, int Challengeid);
-    String addCompletedChallengeToUserByEmailAndChallengeName(String email, String ChallengeName);
+    String addCompletedChallengeToUserByEmailAndChallengeuid(String email, String ChallengeName);
 
 
 }

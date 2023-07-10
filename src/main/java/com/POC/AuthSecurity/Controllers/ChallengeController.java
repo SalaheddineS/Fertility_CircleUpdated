@@ -31,7 +31,7 @@ public class ChallengeController {
 
     @GetMapping("getByName/{name}")
     public ChallengeDTO getByName(@PathVariable String name){
-        return challengeService.getByName(name);
+        return challengeService.getByChallengeuid(name);
     }
 
     @PostMapping("addChallenge")
@@ -44,9 +44,9 @@ public class ChallengeController {
         return challengeService.deleteById(id);
     }
 
-    @DeleteMapping("deleteByName/{name}")
+    @DeleteMapping("deleteByChallengeuid/{name}")
     public String deleteByName(@PathVariable String name){
-        return challengeService.deleteByName(name);
+        return challengeService.deleteByChallengeuid(name);
     }
 
     @PatchMapping("updateChallengeById")
@@ -54,9 +54,9 @@ public class ChallengeController {
         return challengeService.updateChallengeById(challenge);
     }
 
-    @PatchMapping("updateChallengeDescriptionByName")
-    public String updateChallengeDescriptionByName(@RequestBody Challenge challenge){
-        return challengeService.updateChallengeDescriptionByName(challenge);
+    @PatchMapping("updateChallengeDescriptionByChallengeuid")
+    public String updateChallengeDescriptionByChallengeuid(@RequestBody Challenge challenge){
+        return challengeService.updateChallengeDescriptionByChallengeuid(challenge);
     }
 
     @GetMapping("getCompletedChallengesByUser/{email}")
@@ -69,9 +69,9 @@ public class ChallengeController {
         return challengeService.addCompletedChallengeToUserByEmailAndChallengeId(email, challengeId);
     }
 
-    @PostMapping("addCompletedChallengeToUserByEmailAndChallengeName/{email}/{challengeName}")
+    @PostMapping("addCompletedChallengeToUserByEmailAndChallengeuid/{email}/{challengeName}")
     public String addCompletedChallengeToUserByEmailAndChallengeName(@PathVariable String email, @PathVariable String challengeName){
-        return challengeService.addCompletedChallengeToUserByEmailAndChallengeName(email, challengeName);
+        return challengeService.addCompletedChallengeToUserByEmailAndChallengeuid(email, challengeName);
     }
 
     @GetMapping("getUncompletedChallengesByUser/{email}")

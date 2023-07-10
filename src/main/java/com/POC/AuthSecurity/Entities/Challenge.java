@@ -1,6 +1,7 @@
 package com.POC.AuthSecurity.Entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,8 +20,11 @@ public class Challenge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String name;
+    @NotNull @Column(unique = true)
+    private String challengeuid;
+    @NotNull
     private String description;
+
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     Set<User>completedChallengeByUser;

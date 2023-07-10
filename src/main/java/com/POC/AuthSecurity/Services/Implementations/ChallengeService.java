@@ -32,7 +32,7 @@ public class ChallengeService implements IChallengeService {
         for (Challenge challenge : challengeList) {
             challengeDTOList.add(ChallengeDTO.builder()
                     .id(challenge.getId())
-                    .name(challenge.getName())
+                    .name(challenge.getChallengeuid())
                     .description(challenge.getDescription())
                     .build());
         }
@@ -44,18 +44,18 @@ public class ChallengeService implements IChallengeService {
         Challenge challenge = challengeRepository.findById(id).get();
         return ChallengeDTO.builder()
                 .id(challenge.getId())
-                .name(challenge.getName())
+                .name(challenge.getChallengeuid())
                 .description(challenge.getDescription())
                 .build();
     }
 
     @Override
-    public ChallengeDTO getByName(String name) {
+    public ChallengeDTO getByChallengeuid(String name) {
         try {
-            Challenge challenge = challengeRepository.findByName(name);
+            Challenge challenge = challengeRepository.findByChallengeuid(name);
             return ChallengeDTO.builder()
                     .id(challenge.getId())
-                    .name(challenge.getName())
+                    .name(challenge.getChallengeuid())
                     .description(challenge.getDescription())
                     .build();
         } catch (Exception e) {
@@ -66,7 +66,7 @@ public class ChallengeService implements IChallengeService {
     @Override
     public Challenge addChallenge(Challenge challenge) {
         try {
-            Challenge search = challengeRepository.findByName(challenge.getName());
+            Challenge search = challengeRepository.findByChallengeuid(challenge.getChallengeuid());
             if (search != null) throw new RuntimeException("Challenge with this name already exists");
             challenge.setCompletedChallengeByUser(null);
             return challengeRepository.save(challenge);
@@ -86,9 +86,9 @@ public class ChallengeService implements IChallengeService {
     }
 
     @Override
-    public String deleteByName(String name) {
+    public String deleteByChallengeuid(String name) {
         try {
-            challengeRepository.deleteByName(name);
+            challengeRepository.deleteByChallengeuid(name);
             return "challenge deleted";
         } catch (Exception e) {
             throw new RuntimeException("Error while deleting challenge, here are the details : " + e);
@@ -99,10 +99,10 @@ public class ChallengeService implements IChallengeService {
     public String updateChallengeById(Challenge challenge) {
         try {
             Challenge defi = challengeRepository.findById(challenge.getId()).get();
-            Challenge search = challengeRepository.findByName(challenge.getName());
+            Challenge search = challengeRepository.findByChallengeuid(challenge.getChallengeuid());
             if (search != null) throw new RuntimeException("Challenge with this name already exists");
-            if (challenge.getName() != null) {
-                defi.setName(challenge.getName());
+            if (challenge.getChallengeuid() != null) {
+                defi.setChallengeuid(challenge.getChallengeuid());
             }
             if (challenge.getDescription() != null) {
                 defi.setDescription(challenge.getDescription());
@@ -115,9 +115,9 @@ public class ChallengeService implements IChallengeService {
     }
 
     @Override
-    public String updateChallengeDescriptionByName(Challenge challenge) {
+    public String updateChallengeDescriptionByChallengeuid(Challenge challenge) {
         try {
-            Challenge defi = challengeRepository.findByName(challenge.getName());
+            Challenge defi = challengeRepository.findByChallengeuid(challenge.getChallengeuid());
             if (defi == null) throw new RuntimeException("Challenge not found");
             if (challenge.getDescription() != null) {
                 defi.setDescription(challenge.getDescription());
@@ -140,7 +140,7 @@ public class ChallengeService implements IChallengeService {
             for (Challenge challenge : challengeList) {
                 challengeDTOList.add(ChallengeDTO.builder()
                         .id(challenge.getId())
-                        .name(challenge.getName())
+                        .name(challenge.getChallengeuid())
                         .description(challenge.getDescription())
                         .build());
             }
@@ -168,7 +168,7 @@ public class ChallengeService implements IChallengeService {
             for (Challenge challenge : uncompletedChallenges) {
                 challengeDTOList.add(ChallengeDTO.builder()
                         .id(challenge.getId())
-                        .name(challenge.getName())
+                        .name(challenge.getChallengeuid())
                         .description(challenge.getDescription())
                         .build());
             }
@@ -195,11 +195,11 @@ public class ChallengeService implements IChallengeService {
     }
 
     @Override
-    public String addCompletedChallengeToUserByEmailAndChallengeName(String email, String ChallengeName) {
+    public String addCompletedChallengeToUserByEmailAndChallengeuid(String email, String ChallengeName) {
         try {
             email = email.toLowerCase();
             User user = userRepository.findByEmail(email).get();
-            Challenge challenge = challengeRepository.findByName(ChallengeName);
+            Challenge challenge = challengeRepository.findByChallengeuid(ChallengeName);
             if (challenge == null) throw new RuntimeException("Challenge not found");
             if (challenge.getCompletedChallengeByUser().contains(user))
                 throw new RuntimeException("Challenge already added");

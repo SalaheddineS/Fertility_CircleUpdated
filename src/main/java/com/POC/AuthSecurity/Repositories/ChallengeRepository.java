@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ChallengeRepository  extends JpaRepository<Challenge, Integer> {
-    Challenge findByName(String name);
-    void deleteByName(String name);
+    Challenge findByChallengeuid(String name);
+    void deleteByChallengeuid(String name);
     List<Challenge> findByCompletedChallengeByUser_Id(Integer userId);
     List<Challenge> findByCompletedChallengeByUser_IdNot(Integer userId);
 
