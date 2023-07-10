@@ -62,8 +62,6 @@ public class ProgramService implements IProgramService {
     @Override
     public Program addProgram(Program program) {
         try {
-            Program p = programRepository.findProgramByname(program.getName());
-            if (p != null) throw new RuntimeException("Program already exists");
             program.setChallenges(null);
             return programRepository.save(program);
         } catch (Exception e) {
@@ -79,7 +77,6 @@ public class ProgramService implements IProgramService {
             if(p.getChallenges().size()==90) throw new RuntimeException("Program already has 90 challenges");
             Challenge c = challengeRepository.findByChallengeuid(challengeName);
             if (c == null) throw new RuntimeException("Challenge not found");
-
             if (p.getChallenges().contains(c)) throw new RuntimeException("Challenge already exists in program");
             p.getChallenges().add(c);
             programRepository.save(p);
@@ -108,8 +105,6 @@ public class ProgramService implements IProgramService {
     @Override
     public String updateProgramById(int id, Program newProgram) {
         try {
-            Program existingProgram = programRepository.findProgramByname(newProgram.getName());
-            if (existingProgram != null) throw new RuntimeException("Program already exists");
             Program programme = getProgramById(id);
             if (newProgram.getName() != null) {
                 programme.setName(newProgram.getName());
