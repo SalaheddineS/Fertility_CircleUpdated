@@ -1,5 +1,6 @@
 package com.POC.AuthSecurity.Entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -19,6 +20,7 @@ public class SubscriptionType {
     @GeneratedValue
     private Integer id;
     @NotNull
+    @Column(unique = true)
     private String name;
     @NotNull
     private String description;

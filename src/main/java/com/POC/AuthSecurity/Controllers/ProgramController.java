@@ -41,7 +41,7 @@ public class ProgramController {
 
     @GetMapping("getChallengesByProgramName/{name}")
     public List<Challenge> getChallengesByProgramName(@PathVariable String name) {
-        return programService.getChallengesByProgramName(name);
+        return programService.getChallengesByProgramuid(name);
     }
 
     //UPDATE

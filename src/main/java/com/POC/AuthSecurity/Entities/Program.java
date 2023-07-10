@@ -18,6 +18,7 @@ public class Program {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NotNull
+    @Column(unique = true)
     private String name; // nutrition, sport, gestion emotionnelle
     @NotNull
     private String description;

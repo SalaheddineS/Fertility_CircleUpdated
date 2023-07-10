@@ -50,7 +50,7 @@ public class ProgramService implements IProgramService {
     }
 
     @Override
-    public List<Challenge> getChallengesByProgramName(String programName) {
+    public List<Challenge> getChallengesByProgramuid(String programName) {
         try {
             Program p = getProgramByName(programName);
             return p.getChallenges();
@@ -77,7 +77,7 @@ public class ProgramService implements IProgramService {
             Program p = getProgramByName(programName);
             if (p == null) throw new RuntimeException("Program not found");
             if(p.getChallenges().size()==90) throw new RuntimeException("Program already has 90 challenges");
-            Challenge c = challengeRepository.findByName(challengeName);
+            Challenge c = challengeRepository.findByChallengeuid(challengeName);
             if (c == null) throw new RuntimeException("Challenge not found");
 
             if (p.getChallenges().contains(c)) throw new RuntimeException("Challenge already exists in program");

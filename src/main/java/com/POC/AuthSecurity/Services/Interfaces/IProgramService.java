@@ -17,7 +17,7 @@ public interface IProgramService {
     List<Program> getAllPrograms();
     Program getProgramById(int id);
     Program getProgramByName(String name);
-    List<Challenge> getChallengesByProgramName(String name);
+    List<Challenge> getChallengesByProgramuid(String name);
 
     //UPDATE
     String updateProgramDescriptionByName(String name, Program newProgram);

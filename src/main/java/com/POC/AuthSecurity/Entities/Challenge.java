@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.List;
 import java.util.Set;
@@ -20,11 +21,11 @@ public class Challenge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @NotNull @Column(unique = true)
+    @NotNull
+    @Column(unique = true,updatable = false)
     private String challengeuid;
     @NotNull
     private String description;
-
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     Set<User>completedChallengeByUser;

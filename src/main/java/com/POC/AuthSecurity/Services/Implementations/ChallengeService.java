@@ -6,6 +6,7 @@ import com.POC.AuthSecurity.Entities.User;
 import com.POC.AuthSecurity.Repositories.ChallengeRepository;
 import com.POC.AuthSecurity.Repositories.UserRepository;
 import com.POC.AuthSecurity.Services.Interfaces.IChallengeService;
+import com.POC.AuthSecurity.Utilities.GeneratedUtils;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ public class ChallengeService implements IChallengeService {
 
     private final ChallengeRepository challengeRepository;
     private final UserRepository userRepository;
+    private final GeneratedUtils generatedUtils;
 
 
     @Override
@@ -69,6 +71,7 @@ public class ChallengeService implements IChallengeService {
             Challenge search = challengeRepository.findByChallengeuid(challenge.getChallengeuid());
             if (search != null) throw new RuntimeException("Challenge with this name already exists");
             challenge.setCompletedChallengeByUser(null);
+            challenge.setChallengeuid(generatedUtils.generateRandomUid());
             return challengeRepository.save(challenge);
         } catch (Exception e) {
             throw new RuntimeException("Error while adding challenge, here are the details : " + e);
@@ -101,9 +104,7 @@ public class ChallengeService implements IChallengeService {
             Challenge defi = challengeRepository.findById(challenge.getId()).get();
             Challenge search = challengeRepository.findByChallengeuid(challenge.getChallengeuid());
             if (search != null) throw new RuntimeException("Challenge with this name already exists");
-            if (challenge.getChallengeuid() != null) {
-                defi.setChallengeuid(challenge.getChallengeuid());
-            }
+
             if (challenge.getDescription() != null) {
                 defi.setDescription(challenge.getDescription());
             }
