@@ -56,15 +56,8 @@ public class UserService implements IUserService {
     public String saveUser(User user) {
         try {
             user.setEmail(user.getEmail().toLowerCase());
-            if (userRepository.findByEmail(user.getEmail()).isPresent()) { //we check if the email already exists
-                throw new RuntimeException("Email already exists");
-            }
             Role role = roleRepository.findByName("USER");  //we get the role from the database
             if (role == null) throw new RuntimeException("Role not found");
-
-            if (user.getEmail() != null //we check if all fields are filled
-                    && user.getPassword() != null) {
-
                 String email = user.getEmail();
                 String regex = "^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"; //email Regex
 
@@ -82,7 +75,7 @@ public class UserService implements IUserService {
                     return jwtUtilities.generateToken(user);
                 } else throw new RuntimeException("Invalid email");
 
-            } else throw new RuntimeException("Error whilst saving the user");
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -17,7 +17,15 @@ public class SubscriptionTypeService implements ISubscriptionTypeService {
     SubscriptionTypeRepository subscriptionTypeRepository;
     @Override
     public SubscriptionType addSubscriptionType(SubscriptionType subscriptionType) {
-        return subscriptionTypeRepository.save(subscriptionType);
+        try
+        {
+            return subscriptionTypeRepository.save(subscriptionType);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Error while adding subscription type, here are the details : " + e);
+        }
+
     }
 
     @Override
