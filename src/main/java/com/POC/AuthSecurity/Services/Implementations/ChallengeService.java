@@ -68,8 +68,6 @@ public class ChallengeService implements IChallengeService {
     @Override
     public Challenge addChallenge(Challenge challenge) {
         try {
-            Challenge search = challengeRepository.findByChallengeuid(challenge.getChallengeuid());
-            if (search != null) throw new RuntimeException("Challenge with this name already exists");
             challenge.setCompletedChallengeByUser(null);
             challenge.setChallengeuid(generatedUtils.generateRandomUid());
             return challengeRepository.save(challenge);
@@ -102,9 +100,6 @@ public class ChallengeService implements IChallengeService {
     public String updateChallengeById(Challenge challenge) {
         try {
             Challenge defi = challengeRepository.findById(challenge.getId()).get();
-            Challenge search = challengeRepository.findByChallengeuid(challenge.getChallengeuid());
-            if (search != null) throw new RuntimeException("Challenge with this name already exists");
-
             if (challenge.getDescription() != null) {
                 defi.setDescription(challenge.getDescription());
             }
@@ -185,8 +180,6 @@ public class ChallengeService implements IChallengeService {
             email = email.toLowerCase();
             User user = userRepository.findByEmail(email).get();
             Challenge challenge = challengeRepository.findById(Challengeid).get();
-            if (challenge.getCompletedChallengeByUser().contains(user))
-                throw new RuntimeException("Challenge already added");
             challenge.getCompletedChallengeByUser().add(user);
             challengeRepository.save(challenge);
             return "Challenge added successfully";
@@ -201,9 +194,7 @@ public class ChallengeService implements IChallengeService {
             email = email.toLowerCase();
             User user = userRepository.findByEmail(email).get();
             Challenge challenge = challengeRepository.findByChallengeuid(ChallengeName);
-            if (challenge == null) throw new RuntimeException("Challenge not found");
-            if (challenge.getCompletedChallengeByUser().contains(user))
-                throw new RuntimeException("Challenge already added");
+            if (challenge == null ) throw new RuntimeException("Challenge not found");
             challenge.getCompletedChallengeByUser().add(user);
             challengeRepository.save(challenge);
             return "Challenge added successfully";
