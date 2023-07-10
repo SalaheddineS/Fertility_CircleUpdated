@@ -199,7 +199,6 @@ public class ImageService implements IImageService {
 
     @Override
     public String updateRecipePictureName(String oldName, String newName) {
-        if (recipeRepository.findRecipeByName(oldName).isEmpty()) throw new RuntimeException("Recipe not found");
         Image image = imageRepository.findByName(oldName).get();
         if (image.getName().equals(newName)) throw new RuntimeException("New name is the same as the old one");
         image.setName(newName);

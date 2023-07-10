@@ -29,8 +29,7 @@ public class RecipeService implements IRecipeService {
     public Recipe addRecipe(Recipe recipe) {
         try
         {
-            if (recipeRepository.findRecipeByName(recipe.getName()).isPresent()) throw new RuntimeException("Recipe already exists");
-
+            recipe.setRecipePicture(null);
             return recipeRepository.save(recipe);
         }
         catch (Exception e) {
@@ -78,7 +77,6 @@ public class RecipeService implements IRecipeService {
             Recipe recipe = getRecipeById(id);
             if (newRecipe.getName() != null)
             {
-                imageService.updateRecipePictureName(recipe.getName(), newRecipe.getName());
                 recipe.setName(newRecipe.getName());
             }
             if (newRecipe.getIngredients() != null)
@@ -90,6 +88,8 @@ public class RecipeService implements IRecipeService {
                 recipe.setInstructions(newRecipe.getInstructions());
             }
             recipeRepository.save(recipe);
+            //if no error then update image name instead of making multiple api calls to verify if name is already taken
+            if(newRecipe.getName()!= null) imageService.updateRecipePictureName(recipe.getName(), newRecipe.getName());
             return "Recipe successfully updated";
         } catch (Exception e) {
             throw new RuntimeException("Recipe not found");
