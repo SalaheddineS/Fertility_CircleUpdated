@@ -35,11 +35,15 @@ public class RoleService implements IRoleService {
 
     @Override
     public String saveRole(Role role) {
-        if (roleRepository.findByName(role.getName()) == null) {
-             roleRepository.save(role);
-             return "Role saved successfully";
-        }
-        else throw new RuntimeException("Role already Exists");
+      try
+      {
+          roleRepository.save(role);
+          return "Role saved successfully";
+      }
+      catch (Exception e)
+      {
+            throw new RuntimeException("Error whilst saving Role");
+      }
     }
 
     @Override
