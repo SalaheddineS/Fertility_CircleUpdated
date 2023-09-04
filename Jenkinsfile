@@ -1,38 +1,16 @@
 pipeline {
     agent any
-
-    stages {
-        stage('checkout') {
-            steps {
-                checkout scm
-            }
-        }
-        stage('check mvn version') {
-            steps {
-                sh 'mvn --version'
-            }
-        }
-        stage('test') {
-            steps {
-                sh 'mvn clean test'
-            }
-        }
-        stage('build') {
-            steps {
-                sh 'mvn clean install -DskipTests'
-            }
-        }
-        stage('sonarqube') {
-    steps {
-        sh 'mvn sonar:sonar -Dsonar.host.url=http://monitor101.eastus.cloudapp.azure.com -Dsonar.login=sqa_833edfdf90868d4432282043a2c4051e7fd65b1d'
-            }
-        }
-
+    tools {
+        // Define the JDK tool to use
+        jdk 'JDK 17'
     }
-
-    post {
-        success {
-            archiveArtifacts(artifacts: '**/target/*.jar', allowEmptyArchive: false)
+    stages {
+        stage('Build') {
+            steps {
+                // Your build steps here
+                sh 'java -version' // This will use the configured JDK 17 installation
+            }
         }
+        // Add more stages as needed
     }
 }
