@@ -4,7 +4,7 @@ pipeline {
         stage('Build') {
             steps {
                 // Your build steps here
-                sh 'java -version' // This will use the configured JDK 17 installation
+                echo 'this works!' // This will use the configured JDK 17 installation
             }
         }
         // Add more stages as needed
