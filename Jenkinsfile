@@ -2,36 +2,31 @@ pipeline {
     agent any
 
     stages {
-        stage('Check Java Version') {
+        stage('checkout') {
             steps {
-                sh 'java -version'
+                checkout scm
             }
         }
-
-        /* Commented out stages:
-        stage('Build') {
+        stage('test') {
             steps {
-                // Your build steps here
+                sh './mvnw clean test'
             }
         }
-
-        stage('SonarQube') {
+        stage('build') {
             steps {
-                // Your SonarQube steps here
+                sh './mvnw clean install -DskipTests'
             }
         }
-
-        stage('Deploy') {
+        stage('sonarqube') {
             steps {
-                // Your deployment steps here
+                sh "./mvnw verify sonar:sonar -Dsonar.login=sqa_bf671c72e819670061c2bbcd53de75f138132e4c"
             }
         }
-        */
     }
 
     post {
-        failure {
-            echo "Build failed, see above for details."
+        success {
+            archiveArtifacts(artifacts: '**/target/*.jar', allowEmptyArchive: false)
         }
     }
 }
