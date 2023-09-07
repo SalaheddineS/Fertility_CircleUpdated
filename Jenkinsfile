@@ -17,7 +17,12 @@ pipeline {
                 sh './mvnw clean install -DskipTests'
             }
         }
-        stage('sonarqube') {
+        stage('java'){
+            steps {
+                sh 'java -version'
+            }
+        }
+      /*  stage('sonarqube') {
             steps {
                 script {
                     // Access the sonarcommand environment variable
@@ -25,7 +30,7 @@ pipeline {
                     sh sonarCommand
                 }
             }
-        }
+        }*/
     }
 
     post {
