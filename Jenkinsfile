@@ -22,7 +22,7 @@ pipeline {
                 sh 'java -version'
             }
         }
-      /*  stage('sonarqube') {
+        stage('sonarqube') {
             steps {
                 script {
                     // Access the sonarcommand environment variable
@@ -30,7 +30,7 @@ pipeline {
                     sh sonarCommand
                 }
             }
-        }*/
+        }
     }
 
     post {
